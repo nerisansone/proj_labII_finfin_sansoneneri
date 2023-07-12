@@ -21,7 +21,7 @@ def client2function(nomefile):
        
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-        addr = ("127.0.0.1", 52583)
+        addr = ("127.0.0.1", 51583)
 
        
         s.connect(addr)

@@ -12,7 +12,7 @@
 
 #define QUI __LINE__, __FILE__
 #define HOST "127.0.0.1"
-#define PORT 52583 
+#define PORT 51583 
 #define Max_sequence_length 2048
 
 void termina(const char *messaggio) {

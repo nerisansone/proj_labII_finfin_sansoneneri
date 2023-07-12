@@ -129,7 +129,7 @@ def mainServer(thread_count, readers, writers, valgrind):
     global server, archivio
    
     host = 'localhost'
-    port = 52583
+    port = 51583
 
     # creo socket
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
