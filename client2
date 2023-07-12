@@ -1,0 +1,75 @@
+#! /usr/bin/env python3
+import socket, struct, threading, sys
+
+# Riceve esattamente n byte dal socket conn e li restituisce
+# il tipo restituto è "bytes": una sequenza immutabile di valori 0-255
+# Questa funzione è analoga alla readn che abbiamo visto nel C
+def recv_all(conn,n):
+  chunks = b''
+  bytes_recd = 0
+  while bytes_recd < n:
+    chunk = conn.recv(min(n - bytes_recd, 2048))
+    if len(chunk) == 0:
+      return 0
+    chunks += chunk
+    bytes_recd = bytes_recd + len(chunk)
+  return chunks      
+
+def client2function(nomefile):
+    # apro file e creo socket
+    with open(nomefile, 'r') as file:
+       
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        addr = ("127.0.0.1", 52583)
+
+       
+        s.connect(addr)
+        # dico chi sono al server
+        s.sendall(("client_tipo2").encode())
+        lines = file.readlines() 
+        #leggo file e lo invio
+        for line in lines:
+            strip_string = line.strip()
+            
+            if len(line)>2048:
+            
+              continue
+            elif strip_string:
+              s.sendall(struct.pack('!i',len(line)))
+              s.sendall(line.encode())
+            else:
+              continue
+         # segnalo che non ci sono più linee da mandare
+        s.send(b'\x00\x00\x00\x00')
+
+         # segnalo che non ci sono più linee da mandare
+        len_sent = s.recv(4)
+        length  = struct.unpack('!i',len_sent[:4])[0]
+        print(f"Client2: Received {length} bytes")
+       
+        s.close()
+            
+
+if __name__ == '__main__':
+   
+    if len(sys.argv) < 2:
+        print("Usage: client2.py <obj1> <obj2> ...")
+        sys.exit(1)
+
+    # leggo nome file da linea di comando
+    fileargs = sys.argv[1:]
+
+    # creo thread per ogni file
+    threads = []
+    for filename in fileargs:
+        th = threading.Thread(target=client2function, args=(filename,))
+        print(f"Client2: Starting thread for {filename}")
+        th.start()
+        threads.append(th)
+
+
+    for th in threads:
+        th.join()
+
+    print("Client2: All threads terminated\n");
