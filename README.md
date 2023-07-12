@@ -1,3 +1,4 @@
+# Relazione progetto - Neri Sansone 621583
 Il server, una volta avviato, si mette in ascolto sulla porta 51583 e lancia un pool di thread per gestire le connessioni dei client. 
 Per ogni client, il server riceve le sequenze inviate e le scrive su due pipe separate. 
 Inoltre, il server tiene traccia delle connessioni con i client in un file di log.
